@@ -1,0 +1,86 @@
+package main
+
+import "fmt"
+
+// interface
+type PaymentProcessor interface {
+	Pay(amount float64)
+}
+
+// structs
+type BankAccount struct {
+	AccountHolder string
+	Balance       float64
+}
+
+type Mpesa struct {
+	PhoneNumber string
+	Balance     float64
+}
+
+type CreditCard struct {
+	CardHolder  string
+	CreditLimit float64
+}
+
+// Implement Pay() for BankAccount
+
+func (account *BankAccount) Pay(amount float64) {
+	account.Balance -= amount
+	fmt.Println("Payment made using bank account")
+}
+
+func (mpesa *Mpesa) Pay(amount float64) {
+	mpesa.Balance -= amount
+	fmt.Println("Payment made using Mpesa")
+}
+
+func (card *CreditCard) Pay(amount float64) {
+	card.CreditLimit -= amount
+	fmt.Println("Payment made using credit card")
+}
+
+// Function accepting interface
+func ProcessPayment(processor PaymentProcessor, amount float64) {
+	processor.Pay(amount)
+}
+
+func main() {
+
+	fmt.Println("\n-------------Banking App----------------")
+
+	//Create a bank account
+	myAccount := BankAccount{
+		AccountHolder: "Kim",
+		Balance:       1000,
+	}
+
+	//Create an mpesa account
+	myMpesa := Mpesa{
+		PhoneNumber: "0723083003",
+		Balance:     3000,
+	}
+
+	// Create a credit card
+	myCard := CreditCard{
+		CardHolder:  "Rono",
+		CreditLimit: 7000,
+	}
+
+	fmt.Println("Bank Account: ", myAccount.Balance)
+	fmt.Println("M-Pesa balance: ", myMpesa.Balance)
+	fmt.Println("Credit card available: ", myCard.CreditLimit)
+
+	fmt.Println("")
+	// process payment
+	ProcessPayment(&myAccount, 500)
+	ProcessPayment(&myMpesa, 600)
+	ProcessPayment(&myCard, 500)
+
+	fmt.Println("\n---- UPDATED BALANCE ----")
+
+	fmt.Println("Bank Account: ", myAccount.Balance)
+	fmt.Println("M-Pesa balance: ", myMpesa.Balance)
+	fmt.Println("Credit card available: ", myCard.CreditLimit)
+
+}
